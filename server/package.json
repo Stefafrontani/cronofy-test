@@ -1,0 +1,27 @@
+{
+  "name": "calendly-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "create-migration": "node-pg-migrate create",
+    "migrate-up": "node-pg-migrate --envPath .env up",
+    "migrate-down": "node-pg-migrate --envPath .env down"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  },
+  "dependencies": {
+    "axios": "^0.21.4",
+    "config": "^3.3.6",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "node-pg-migrate": "^6.0.0",
+    "pg": "^8.7.1"
+  }
+}
