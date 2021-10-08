@@ -3,19 +3,22 @@
 exports.shorthands = undefined;
 
 exports.up = pgm => {
-  pgm.createTable('users', {
-    id: 'id',
-    sub: {
+  pgm.addColumns('users', {
+    providerName: {
       type: 'varchar(1000)',
       notNull: false
     },
-    accessToken: {
+    profileId: {
       type: 'varchar(1000)',
       notNull: false
     },
-    refreshToken: {
+    profileName: {
+      type: 'varchar(1000)',
+      notNull: false
+    },
+    providerService: {
       type: 'varchar(1000)',
       notNull: false
     }
-  });
+  }); 
 };

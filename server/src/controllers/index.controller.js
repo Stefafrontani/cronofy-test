@@ -25,21 +25,77 @@ const getAccessToken = async (req, res) => {
   }
   const headers = { "Content-Type": "application/json; charset=utf-8" }
 
-  // const headers = { "Content-Type": "application/json" }
   axios.post('https://api.cronofy.com/oauth/token', bodyToSend, { headers })
-  .then((res) => {
-    console.log(res)
+  .then(async (response) => {
+    const userProfile = response.data;
+    console.log(userProfile)
+    const signUpResponse = await signUp(userProfile);
+    console.log(signUpResponse)
   })
   .catch(err => console.log(err))
+}
+
+const signUp = async (userProfile) => {
+  console.log('signUp')
+  console.log(userProfile)
   
-  // const response = await pool.query('SELECT * FROM users');
-  // try {
-  //   const response = await axios.get(/* process.env.CALENDLY_AUTH_BASE_URL */'https://auth.calendly.com', {})
-  // } catch (error) {
-  //   console.log(error)
-  // }
+  const {
+    account_id, 
+    access_token,
+    refresh_token,
+    sub,
+    linking_profile,
+    expires_in,
+    token_type,
+    scope,
+  } = userProfile;
+
+   const {
+    profile_id,
+    profile_name,
+    provider_service
+  } = linking_profile;
+
+try {
+    const response = await pool.query(`INSERT INTO users ("accountId", "accessToken", "refreshToken", sub) VALUES ($1, $2, $3, $4) returning *;`, [account_id, access_token, refresh_token, sub])
+    console.log('response')
+    console.log(response)
+    return { user: true }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const signIn = async  (userProfile) => {
+  console.log('signIn')
+  const {
+    account_id, 
+    access_token,
+    refresh_token,
+    sub,
+    linking_profile,
+    expires_in,
+    token_type,
+    scope,
+  } = userProfile;
+
+   const {
+    profile_id,
+    profile_name,
+    provider_service
+  } = linking_profile;
+
+  try {
+    const response = await pool.query(`SELECT * FROM users WHERE "accountId"=${account_id};`)
+    console.log('response')
+    console.log(response)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 module.exports = {
-  getAccessToken
+  getAccessToken,
+  signUp,
+  signIn
 }

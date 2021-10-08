@@ -12,7 +12,7 @@ const SignInPage = () => {
       target="_blank"
       rel="noopener noreferrer"
     >
-      SYNC CRONOFY
+      LOGIN | REGISTER
     </a>
   )
 }

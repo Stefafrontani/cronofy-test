@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon src/index.js",
     "create-migration": "node-pg-migrate create",
-    "migrate-up": "node-pg-migrate --envPath .env up",
+    "migrate-up": "node-pg-migrate --envPath src/.env up",
     "migrate-down": "node-pg-migrate --envPath .env down"
   },
   "keywords": [],
