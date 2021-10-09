@@ -51,13 +51,14 @@ const signUp = async (userProfile) => {
   } = userProfile;
 
    const {
+    provider_name,
     profile_id,
     profile_name,
     provider_service
   } = linking_profile;
 
 try {
-    const response = await pool.query(`INSERT INTO users ("accountId", "accessToken", "refreshToken", sub) VALUES ($1, $2, $3, $4) returning *;`, [account_id, access_token, refresh_token, sub])
+    const response = await pool.query(`INSERT INTO users ("accountId", "accessToken", "refreshToken", sub, "providerName", "profileId", "profileName", "providerService") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning *;`, [account_id, access_token, refresh_token, sub, provider_name, profile_id, profile_name, provider_service])
     console.log('response')
     console.log(response)
     return { user: true }
