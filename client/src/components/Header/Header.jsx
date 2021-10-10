@@ -7,7 +7,8 @@ const Header = () => {
       <nav>
         <ul style={{ display: 'flex' }}>
           <li><Link to="/login">LOGIN</Link></li>
-          <li><Link to="/availability">AVAILABILITY</Link></li>
+          <li><Link to="/availabilityViewer">AVAILABILITY</Link></li>
+          <li><Link to="/calendarSync">CALENDAR SYNC</Link></li>
         </ul>
       </nav>
     </header>

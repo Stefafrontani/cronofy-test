@@ -1,7 +1,8 @@
 const { Router } =  require('express')
 const router = Router()
-const { getAccessToken } = require('../controllers/index.controller')
+const { getAccessToken, getElementToken } = require('../controllers/index.controller')
 
 router.post('/oauth/token', getAccessToken);
+router.post('/elementToken', getElementToken);
 
 module.exports = router;

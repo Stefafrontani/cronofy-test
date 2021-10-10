@@ -9,7 +9,7 @@ const SignInPage = () => {
     <a
       className="App-link"
       href={`${REACT_APP_CRONOFY_AUTH_BASE_URL}?response_type=code&client_id=${REACT_APP_CRONOFY_CLIENT_ID}&redirect_uri=${REACT_APP_CRONOFY_REDIRECT_URI}&scope=${'create_calendar read_events create_event  delete_event  read_free_busy change_participation_status'}`}
-      target="_blank"
+      /* target="_blank" */
       rel="noopener noreferrer"
     >
       LOGIN | REGISTER

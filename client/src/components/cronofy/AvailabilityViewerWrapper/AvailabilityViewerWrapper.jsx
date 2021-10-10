@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import * as CronofyElements from "cronofy-elements";
 
+console.log(CronofyElements)
+
 const AvailabilityViewerWrapper = ({ options }) => {
-  const [AvailabilityWrapper, setAvailabilityWrapper] = useState(null);
+  const [element, setElement] = useState(null);
   
   useEffect(() => {
-    if (!AvailabilityWrapper) {
-      setAvailabilityWrapper(
+    if (!element) {
+      setElement(
         CronofyElements.AvailabilityViewer(options)
       );
     }
@@ -14,8 +16,8 @@ const AvailabilityViewerWrapper = ({ options }) => {
 
 
   useEffect(() => {
-    if (AvailabilityWrapper) {
-      AvailabilityWrapper.update(options)
+    if (element) {
+      element.update(options)
     }
   }, [options])
 

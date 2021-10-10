@@ -1,10 +1,10 @@
 import React from 'react';
-import AvailabilityViewerWrapper from '../../components/AvailabilityViewerWrapper/AvailabilityViewerWrapper';
+import AvailabilityViewerWrapper from '../../components/cronofy/AvailabilityViewerWrapper/AvailabilityViewerWrapper';
 
 const AvailabilityPage = () => {
-
+  const AvailabilityViewerWrapperOptions = {}
   return (
-    <AvailabilityViewerWrapper />
+    <AvailabilityViewerWrapper options={AvailabilityViewerWrapperOptions}/>
   );
 }
 
