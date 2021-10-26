@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import Navigation from './Navigation';
 import Header from './components/Header/Header'
 import './App.css';
