@@ -13,12 +13,11 @@ const CronofyAuthorizationPage = () => {
     // const headers = { "Content-Type": "application/json" }
     fetch(`${process.env.REACT_APP_COLONY_API_URL}/oauth/token`, { body: JSON.stringify(body), headers, method: "POST" })
       .then((res) => {
-        console.log(res)
         return res.json()
       })
-      .then((cronofyUser) => {
-        console.log(cronofyUser)
-        localStorage.setItem('cronofyUser', JSON.stringify(cronofyUser))
+      .then((authorizationInfo) => {
+        const { user, profile } = authorizationInfo;
+        localStorage.setItem('cronofyUser', JSON.stringify({ ...user, profiles: [profile] }))
       })
       .catch(err => console.log(err, 'asdasd'))
   }, [])
