@@ -1,3 +1,8 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 .App {
   text-align: center;
 }
@@ -39,4 +44,74 @@
 
 ul {
   list-style-type: none;
+}
+
+button {
+  background-color: inherit;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 2px 2px 6px 3px rgba(0,0,0,0.1);
+  padding: 10px 16px;
+}
+
+select {
+  background-color: rgba(0,0,0,0.1);
+  border: none;
+  padding: 15px;
+}
+
+table {
+  padding: 20px 40px;
+}
+table thead {
+  background-color: lightblue;
+}
+table tbody {
+  background-color: lightyellow;
+}
+
+table thead tr td {
+  padding: 10px 5px;
+}
+
+table tbody tr td {
+  padding: 15px 10px;
+}
+
+table tbody tr td:nth-child(4) {
+  text-align: left;
+}
+
+table tbody tr td button {
+  background-color: white;
+}
+
+[data-tablecolumn="url"] {
+}
+[data-tablecolumn="description"] {
+  text-align: left;
+}
+[data-tablecolumn="cronofy-client-options"] {
+  text-align: left;
+}
+[data-tablecolumn="cronofy-client-method"] {
+  text-align: left;
+}
+[data-tablecolumn="cronofy-client-method-options"] {
+  text-align: left;
+}
+[data-tablecolumn="query"] {
+  text-align: left;
+}
+[data-tablecolumn="body"] {
+  text-align: left;
+}
+[data-tablecolumn="call"] {
+}
+
+input {
+  border: 1px solid lightgrey;
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 40px;
 }
