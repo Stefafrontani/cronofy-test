@@ -1,0 +1,60 @@
+.dateTimePickerPage .actionsButtonsContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  gap: 20px;
+}
+
+
+.draggableZone {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 30px;
+  min-width: 800px;
+  max-width: 800px;
+}
+
+.draggableZone .draggableZone__must,
+.draggableZone .draggableZone__optional {
+  flex: 1 1 0;
+}
+
+.draggableZone__optional {
+  border: 1px solid black;
+}
+.draggableZone__must {
+  border: 1px solid black;
+}
+
+.draggableZone__must h2,
+.draggableZone__optional h2 {
+  margin-bottom: 20px;
+}
+
+.draggableZone__must ul {
+  min-height: 200px;
+}
+.draggableZone__optional ul {
+  min-height: 200px;
+}
+
+.draggableZone__must ul li,
+.draggableZone__optional ul li {
+  margin-bottom: 10px;
+}
+
+.users ul {
+  display: flex;
+  gap: 20px;
+}
+.users ul li {
+  cursor: pointer;
+  max-width: 250px;
+  padding: 20px;
+  box-shadow: 2px 2px 6px 4px rgba(0,0,0,0.1);
+}
+
+.users ul li span {
+  font-weight: 900;
+}
