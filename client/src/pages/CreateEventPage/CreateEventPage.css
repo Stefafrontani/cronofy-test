@@ -1,0 +1,18 @@
+.createEventPage {
+
+}
+
+.createEventPage .event {
+  margin-bottom: 20px;
+}
+.createEventPage .event p:first-child {
+  margin-bottom: 10px;
+}
+
+.createEventPage .event p span {
+  font-weight: 900;
+}
+
+.createEventPage .confirmation {
+
+}
