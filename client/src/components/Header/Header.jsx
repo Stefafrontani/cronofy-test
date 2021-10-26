@@ -7,8 +7,9 @@ const Header = () => {
       <nav>
         <ul style={{ display: 'flex' }}>
           <li><Link to="/login">LOGIN</Link></li>
-          <li><Link to="/availabilityViewer">AVAILABILITY</Link></li>
           <li><Link to="/calendarSync">CALENDAR SYNC</Link></li>
+          <li><Link to="/dateTimePicker">DATE TIME PICKER</Link></li>
+          <li><Link to="/endpoints">ENDPOINTS</Link></li>
         </ul>
       </nav>
     </header>
