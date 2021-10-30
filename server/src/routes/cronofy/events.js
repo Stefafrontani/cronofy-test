@@ -3,7 +3,7 @@ const router = Router();
 const { events } = require('../../controllers/cronofy');
 const {
   getCronofyEvents,
-  createEvent,
+  createEventRoute,
   receiveCronofyEventsTriggers,
   createNotificationsChannel,
   receiveCronofyNotifications,
@@ -15,7 +15,7 @@ router.use('*', (req, res, next) => {
 });
 
 router.get('/', getCronofyEvents);
-router.post('/', createEvent);
+router.post('/', createEventRoute);
 router.get('/subscriptions/callback', receiveCronofyEventsTriggers);
 router.post('/notifications', createNotificationsChannel);
 router.post('/notifications/callback', receiveCronofyNotifications);

@@ -28,9 +28,9 @@ const getCronofyEvents = async (userId, queryParams) => {
 
   const cronofyClient = new Cronofy(cronofyClientOptions);
 
-  const queryString = Object.entries(queryParams).reduce((acc, [key, value]) => { return `${acc}&${key}=${value}`}, '');
+  const queryString = Object.entries(queryParams).reduce((acc, [key, value]) => { return `${acc}&${key}=${value}` }, '');
   console.log(queryString);
-  
+
   const createNotificationChannelResponse = await cronofyClient.readEvents(queryString)
 
   console.log(createNotificationChannelResponse);
@@ -38,10 +38,11 @@ const getCronofyEvents = async (userId, queryParams) => {
   res.status(200).send('OK')
 }
 
-const createEvent = async (req, res) => {
-  const reqBody = req.body;
-  const slot = reqBody.slot || {};
+const createCronofyEvent = async () => {
   const { start, end, participants, attendees, subscriptions } = slot;
+
+  const eventSummary = "Demo meeting";
+  const eventDescription = "The Cronofy developer demo has created this event";
   
   participants.forEach(async (user) => {
     const { sub } = user;
@@ -49,7 +50,7 @@ const createEvent = async (req, res) => {
     const userFound = selectUserByIdResponse.rows && selectUserByIdResponse.rows[0];
 
     const { accessToken } = userFound;
-    
+
     const cronofyClientOptions = {
       client_id: process.env.CRONOFY_CLIENT_ID,
       client_secret: process.env.CRONOFY_CLIENT_SECRET,
@@ -61,15 +62,15 @@ const createEvent = async (req, res) => {
 
     const userInfo = await cronofyClient.userInfo();
     const calendars = userInfo["cronofy.data"].profiles[0].profile_calendars
-    
+
 
     calendars.forEach(async (calendar) => {
       const { calendar_id } = calendar;
       const requestElementTokenOptions = {
         calendar_id: calendar_id,
         event_id: `lala2`,
-        summary: "Demo meeting",
-        description: "The Cronofy developer demo has created this event",
+        summary: eventSummary,
+        description: eventDescription,
         start: start,
         end: end,
         conferencing: {
@@ -78,16 +79,48 @@ const createEvent = async (req, res) => {
         subscriptions
       }
 
-      if(attendees) {
+
+      const appEventData = { summary, description, start, end, calendarId };
+      const newAppEventCreated = await createAppEvent(appEventData);
+
+      if (attendees) {
         requestElementTokenOptions.attendees = attendees;
       }
-  
+
       const createEventResponse = await cronofyClient.createEvent(requestElementTokenOptions)
       console.log(createEventResponse)
     })
   });
 
   return;
+}
+
+const createAppEvent = async (newEvent) => {
+  // Destructuring evento
+  const { summary, description, start, end, calendarId } = newEvent;
+  const subscriptionCallbackUrl = "http://b628-152-168-95-55.ngrok.io/cronofy/events/subscriptions/callback"
+  // Insert Evento en bd
+  const insertEventResponse = await pool.query('\
+    INSERT INTO\
+    events ("subscriptionCallbackUrl", summary, description, start, end)\
+    VALUES ($1, $2, $3, $4, $5) RETURNING *'
+    ,
+    [subscriptionCallbackUrl, summary, description, start, end]
+  )
+
+  // Devolver evento
+
+  console.log(insertEventResponse.rows);
+}
+
+const createEventRoute = async (req, res) => {
+  const reqBody = req.body;
+  const slot = reqBody.slot || {};
+  const newCronofyEvent = await createCronofyEvent(slot);
+
+  console.log(newAppEvent);
+
+  res.send(newAppEvent);
 }
 
 const receiveCronofyEventsTriggers = (req, res) => {
@@ -110,7 +143,7 @@ const createNotificationsChannel = async (req, res) => {
 
   const reqBody = req.body;
   const { userId: organizerId } = req.body;
-  
+
   const userFound = await getUserById(organizerId);
 
   console.log(userFound);
@@ -158,7 +191,7 @@ const receiveCronofyNotifications = (req, res) => {
 
 module.exports = {
   getCronofyEvents,
-  createEvent,
+  createEventRoute,
   receiveCronofyEventsTriggers,
   createNotificationsChannel,
   receiveCronofyNotifications,
