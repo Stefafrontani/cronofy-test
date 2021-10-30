@@ -6,7 +6,7 @@ const getUserInfo = (userId) => {
     "Content-Type": "application/json; charset=utf-8"
   }
 
-  return axios.get(`${process.env.REACT_APP_COLONY_API_URL}/users/${userId}/info`, { headers })
+  return axios.get(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/users/${userId}/info`, { headers })
     .then((response) => {
       const userInfo = response.data;
       return userInfo
@@ -21,7 +21,7 @@ const refreshToken = (userId) => {
   }
 
   const body = { userId }
-  return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/oauth/token/refresh`, body, { headers })
+  return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/auth/token/refresh`, body, { headers })
     .then((response) => {
       const userInfo = response.data;
       localStorage.setItem('cronofyUser', JSON.stringify(userInfo))
@@ -34,7 +34,7 @@ const getElementToken = (subs, permissions) => {
   console.log('getElementToken');
   const headers = { "Content-Type": "application/json; charset=utf-8" }
 
-  return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/elementToken`, { subs, permissions }, { headers })
+  return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/auth/elementToken`, { subs, permissions }, { headers })
     .then((response) => {
       const elementToken = response.data;
       console.log(elementToken)
@@ -49,7 +49,7 @@ const createEvent = (slot) => {
   const body = { slot }
   const headers = { "Content-Type": "application/json; charset=utf-8" }
 
-  return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/events`, body, { headers })
+  return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/events`, body, { headers })
     .then((response) => {
       const responseData = response.data;
       console.log(responseData)
@@ -57,7 +57,6 @@ const createEvent = (slot) => {
     })
    .catch(err => console.log(err))
 }
-
 
 export const cronofyActions = {
   getUserInfo,
