@@ -2,18 +2,14 @@ import React, { useState } from 'react';
 import { cronofyActions } from '../../actions';
 import './CreateEventPage.css';
 
-const { createEvent, createSmartInvitee } = cronofyActions;
-
-const REACT_APP_CRONOFY_SECRET = process.env.REACT_APP_CRONOFY_SECRET
-const REACT_APP_CRONOFY_CLIENT_ID = process.env.REACT_APP_CRONOFY_CLIENT_ID
-const REACT_APP_CRONOFY_AUTH_BASE_URL = process.env.REACT_APP_CRONOFY_AUTH_BASE_URL  
-const REACT_APP_CRONOFY_REDIRECT_URI = process.env.REACT_APP_CRONOFY_REDIRECT_URI
+const { createEvent } = cronofyActions;
 
 const CreateEventPage = (event) => {
+  const [ atendee, setAtendee ] = useState({ email: "stefanofrontani13@gmail.com" });
   const urlSearchParams = new URLSearchParams(window.location.search);
   const stringifiedSlot = urlSearchParams.get('slot');
-  const [ atendee, setAtendee ] = useState({ email: "stefanofrontani13@gmail.com" });
   const slot = JSON.parse(stringifiedSlot);
+  const organizerId = urlSearchParams.get('organizerId');
 
   const handleCreateEvent = () => {
     if (atendee) {
@@ -48,8 +44,12 @@ const CreateEventPage = (event) => {
         <p>TO: <span>{formattedEndDate}</span></p>
       </div>
       <form style={{ marginBottom: "10px" }}>
-        <label>Email</label>
-        <input value={atendee.email} name="email" onChange={handleOnChange}/>
+      <div className="form-row">
+        <div className="field">
+          <label>Atendee Email</label>
+          <input value={atendee.email} name="email" onChange={handleOnChange}/>
+        </div>
+      </div>
       </form>
       <div className="confirmation">
         <button onClick={handleCreateEvent}>
