@@ -11,7 +11,7 @@ const CronofyAuthorizationPage = () => {
     }
     const headers = { "Content-Type": "application/json; charset=utf-8" }
     // const headers = { "Content-Type": "application/json" }
-    fetch(`${process.env.REACT_APP_COLONY_API_URL}/oauth/token`, { body: JSON.stringify(body), headers, method: "POST" })
+    fetch(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/auth/token`, { body: JSON.stringify(body), headers, method: "POST" })
       .then((res) => {
         return res.json()
       })

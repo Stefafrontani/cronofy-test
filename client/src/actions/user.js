@@ -4,7 +4,7 @@ const getUsers = () => {
   console.log('getUsers');
   const headers = { "Content-Type": "application/json; charset=utf-8" }
 
-  return axios.get(`${process.env.REACT_APP_COLONY_API_URL}/users`, { headers })
+  return axios.get(`${process.env.REACT_APP_COLONY_API_URL}/app/users`, { headers })
     .then((response) => {
       const users = response.data;
       const usersFormatted = users.map((user) => {
@@ -29,7 +29,7 @@ const getUserById = (userId) => {
   console.log('getUserById');
   const headers = { "Content-Type": "application/json; charset=utf-8" }
 
-  return axios.get(`${process.env.REACT_APP_COLONY_API_URL}/users/${userId}`, { headers })
+  return axios.get(`${process.env.REACT_APP_COLONY_API_URL}/app/users/${userId}`, { headers })
     .then(async (response) => {
       const userFound = response.data;
       return userFound;

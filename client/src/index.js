@@ -8,7 +8,7 @@ window.createTable = (config) => {
   const headers = config.headers;
   const rows = config.rows;
   return (
-    <table>A
+    <table>
       <thead>
         <tr>
           {headers.map((header, index)=> {
