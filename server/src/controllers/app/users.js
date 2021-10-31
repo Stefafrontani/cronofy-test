@@ -1,6 +1,6 @@
 
 // dotenv package - use .env file
-require('dotenv').config({ path: '../../src/.env' });
+require('dotenv').config({ path: './src/.env' });
 
 const { Pool } = require('pg')
 const pool = new Pool({

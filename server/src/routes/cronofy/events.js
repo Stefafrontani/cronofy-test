@@ -2,7 +2,11 @@ const { Router } =  require('express');
 const router = Router();
 const { events } = require('../../controllers/cronofy');
 const {
-  createEvent,
+  getCronofyEvents,
+  createEventRoute,
+  receiveCronofyEventsTriggers,
+  createNotificationsChannel,
+  receiveCronofyNotifications,
 } = events;
 
 router.use('*', (req, res, next) => {
@@ -10,6 +14,10 @@ router.use('*', (req, res, next) => {
   next();
 });
 
-router.post('/', createEvent);
+router.get('/', getCronofyEvents);
+router.post('/', createEventRoute);
+router.get('/subscriptions/callback', receiveCronofyEventsTriggers);
+router.post('/notifications', createNotificationsChannel);
+router.post('/notifications/callback', receiveCronofyNotifications);
 
 module.exports = router;
