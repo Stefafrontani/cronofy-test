@@ -43,10 +43,9 @@ const getElementToken = (subs, permissions) => {
    .catch(err => console.log(err))
 }
 
-const createEvent = (slot) => {
+const createEvent = (newEvent) => {
   console.log('createEvent');
-  const { start, end, participants } = slot;
-  const body = { slot }
+  const body = { newEvent }
   const headers = { "Content-Type": "application/json; charset=utf-8" }
 
   return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/events`, body, { headers })
