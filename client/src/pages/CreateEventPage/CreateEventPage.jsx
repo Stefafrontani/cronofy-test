@@ -1,45 +1,53 @@
 import React, { useState } from 'react';
+import EventSubscriptions from '../../components/EventSubscriptions/EventSubscriptions' ;
+import EventData from '../../components/EventData/EventData' ;
 import { cronofyActions } from '../../actions';
+import { tablesConfig } from '../../helpers';
 import './CreateEventPage.css';
+
+const { createEventPageTablesConfig } = tablesConfig;
 
 const { createEvent, createNotificationsChannel } = cronofyActions;
 
-const CreateEventPage = (event) => {
+const CreateEventPage = () => {
   const [ atendee, setAtendee ] = useState({ email: "stefanofrontani13@gmail.com" });
-  const [ transitionsOffsets, setTransitionsOffsets ] = useState([]);
-
+  const [ eventData, setEventData ] = useState([]);
+  const [ eventSubscriptions, setEventSubscriptions ] = useState([]);
+  
   const urlSearchParams = new URLSearchParams(window.location.search);
   const stringifiedSlot = urlSearchParams.get('slot');
   const slot = JSON.parse(stringifiedSlot);
   const organizerId = urlSearchParams.get('organizerId');
 
   const handleCreateEvent = () => {
+    const { summary, description } = eventData;
+    const { start, end, participants } = slot;
     if (atendee) {
       const { email } = atendee;
       const attendees = {
         invite: [
-          {
-            email: email,
-            display_name: `Invitee ${email}`
-          }
+          { email, display_name: `Invitee ${email}` }
         ]
       }
       slot.attendees = attendees;
     }
-    // if (Object.keys(transitionsOffsets).length) {
-    //   slot.subscriptions = [
-    //     {
-    //       type: "webhook",
-    //       uri: "http://b628-152-168-95-55.ngrok.io/cronofy/events/triggers",
-    //       transitions: formatTransitions(transitionsOffsets)
-    //     }
-    //   ];
-    // }
-    createEvent(slot);
-  }
 
-  const handleCreateNotificationsChannel = () => {
-    createNotificationsChannel(organizerId);
+    const newEvent = {
+      // subscriptionCallbackUrl, -> BE
+      summary,
+      description,
+      start,
+      end,
+      participants,
+      // status -> BE
+    }
+
+    if (eventSubscriptions.length) {
+      newEvent.subscriptions = eventSubscriptions;
+    }
+
+    console.log(newEvent);
+    createEvent(newEvent);
   }
 
   const handleOnChange = ({ target }) => {
@@ -47,29 +55,20 @@ const CreateEventPage = (event) => {
     setAtendee({ [name]: value })
   }
 
-  const handleTransitions = ({ target }) => {
-    const { name, value, dataset } = target;
-    const { eventbeforeafter, eventstartend } = dataset;
-    setTransitionsOffsets({ ...transitionsOffsets, [eventbeforeafter]: { ...transitionsOffsets[eventbeforeafter], [eventstartend]:  value } })
+  const handleEventDataCallback = (formattedEventData) => {
+    setEventData(formattedEventData);
   }
-  
-  const formatTransitions= (transitions) => {
-    let formattedTransitions = [];
-    Object.entries(transitions).forEach(([key, startyend]) => {
-      Object.keys(startyend).forEach((startoend) => {
-        formattedTransitions.push({
-            [key]: `event_${startoend}`,
-            offset: { minutes: startyend[startoend] }
-        });
-      });
-    });
-    return formattedTransitions;
+  const handleEventSubscriptionsCallback = (formattedEventSubscriptions) => {
+    setEventSubscriptions(formattedEventSubscriptions);
   }
 
   const startDate = new Date(slot.start);
   const endDate = new Date(slot.end);
   const formattedStartDate = startDate && startDate.toLocaleString('es-AR', {});
   const formattedEndDate = endDate && endDate.toLocaleString('es-AR', {});
+
+  createEventPageTablesConfig.cronofy.rows[0][createEventPageTablesConfig.cronofy.rows[0].length - 1].props = { onClick: handleCreateEvent }
+  createEventPageTablesConfig.cronofy.rows[0][createEventPageTablesConfig.cronofy.rows[0].length - 1].html = atendee && atendee.email ? 'CONFIRM EVENT WITH ATENDEE' : 'CONFIRM EVENT WITH NO ATENDEE'
 
   return (
     <div className="createEventPage">
@@ -84,36 +83,11 @@ const CreateEventPage = (event) => {
             <input value={atendee.email} name="email" onChange={handleOnChange}/>
           </div>
         </div>
-        <div className="form-row">
-          <div className="field">
-            <label>Before event start (minutes)</label>
-            <input type="number" data-eventbeforeafter="before" data-eventstartend="start" onChange={handleTransitions}/>
-          </div>
-          <div className="field">
-            <label>After event start (minutes)</label>
-            <input type="number" data-eventbeforeafter="after" data-eventstartend="start" onChange={handleTransitions}/>
-          </div>
-        </div>
-        <div className="form-row">
-          <div className="field">
-            <label>Before event end (minutes)</label>
-            <input type="number" data-eventbeforeafter="before" data-eventstartend="end" onChange={handleTransitions}/>
-          </div>
-          <div className="field">
-            <label>After event end (minutes)</label>
-            <input type="number" data-eventbeforeafter="after" data-eventstartend="end" onChange={handleTransitions}/>
-          </div>
-        </div>
       </form>
-      <div className="confirmation">
-        <button onClick={handleCreateEvent}>
-          CONFIRM EVENT WITH ATENDEE
-        </button>
-      </div>
-      <div className="notification-channel">
-        <button onClick={handleCreateNotificationsChannel}>
-          CREATE NOTIFICATION CHANNEL
-        </button>
+      <EventData handleCallback={handleEventDataCallback}/>
+      <EventSubscriptions handleCallback={handleEventSubscriptionsCallback}/>
+      <div className="table">
+        {window.createTable(createEventPageTablesConfig.cronofy)}
       </div>
     </div>
   )
