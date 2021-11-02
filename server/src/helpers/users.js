@@ -1,6 +1,7 @@
 // dotenv package - use .env file
 require('dotenv').config({ path: './src/.env' });
 
+const Cronofy = require('cronofy');
 const { Pool } = require('pg');
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
@@ -10,18 +11,59 @@ const pool = new Pool({
   database: process.env.POSTGRES_DB
 });
 
-const getUserById = async (userId) => {
-  console.log('getUserById')
+const getUserById = async ({ userId, accountId, sub }) => {
+  console.log('getUserById');
+  let userFound = null;
+  if (userId) {
+    try {
+      const response = await pool.query(`SELECT * FROM users WHERE id=$1`, [userId])
+      userFound = (response && response.rows) && response.rows[0];
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  if (accountId && !userFound) {
+    try {
+      const response = await pool.query(`SELECT * FROM users WHERE "accountId"=$1`, [accountId])
+      userFound = (response && response.rows) && response.rows[0];
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  if (sub && !userFound) {
+    try {
+      const response = await pool.query(`SELECT * FROM users WHERE sub=$1`, [sub])
+      userFound = (response && response.rows) && response.rows[0];
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return userFound;
+}
+
+const getUserInfo = async (accessToken) => {
+  let userInfo = {};
+  
+  const cronofyClientOptions = {
+    client_id: process.env.CRONOFY_CLIENT_ID,
+    client_secret: process.env.CRONOFY_CLIENT_SECRET,
+    data_center: process.env.CRONOFY_DATA_CENTER_ID,
+    access_token: accessToken
+  };
+
+  const cronofyClient = new Cronofy(cronofyClientOptions);
+
   try {
-    // const response = await pool.query(`INSERT INTO users ("accountId", "accessToken", "refreshToken", sub, "providerName", "profileId", "profileName", "providerService") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning *;`, [account_id, access_token, refresh_token, sub, provider_name, profile_id, profile_name, provider_service])
-    const response = await pool.query(`SELECT * FROM users WHERE id=$1`, [userId])
-    const userFound = (response && response.rows) && response.rows[0];
-    return userFound;
+    userInfo = await cronofyClient.userInfo();
   } catch (error) {
     console.log(error)
   }
+
+  return userInfo;
 }
 
 module.exports = {
+  getUserInfo,
   getUserById
 }
