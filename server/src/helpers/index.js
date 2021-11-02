@@ -1,9 +1,11 @@
 const auth = require('./auth');
-const users = require('./users');
+const events = require('./events');
 const querys = require('./querys');
+const users = require('./users');
 
 module.exports = {
   auth,
-  users,
-  querys
+  events,
+  querys,
+  users
 }
