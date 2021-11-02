@@ -10,37 +10,21 @@ const cronofyClient = new Cronofy({
 });
 
 const { users } = require('../../helpers');
-const { getUserById } = users;
+const { getUserById, getUserInfo } = users;
 
 /** getUserInfoNCC */
-const getUserInfoNCC = async (req, res) => {
+const getUserInfoNCCRoute = async (req, res) => {
   console.log('getUserInfo');
   const reqParams = req.params;
   const userId = reqParams.userId;
 
-  const userFound = await getUserById(userId);
+  const userFound = await getUserById({ userId });
+  const { accessToken } = userFound;
+  const userInfo = await getUserInfo(accessToken);
 
-  const accessToken = userFound.accessToken;
-
-  const headers = {
-    // "Content-Type": "application/json; charset=utf-8",
-    // "Host": process.env.CRONOFY_DATA_CENTER_URL,
-    "Authorization": `Bearer ${accessToken}`
-  }
-
-  axios.get(`${process.env.CRONOFY_DATA_CENTER_URL}/v1/userinfo`, { headers })
-    .then((response) => {
-      const userInfo = response.data;
-      console.log('userInfo')
-      console.log(userInfo);
-      res.send(userInfo);
-    })
-   .catch(err => {
-     console.log('ERROR')
-     console.log(err)
-   })
+  res.send(userInfo);
 }
 
 module.exports = {
-  getUserInfo: getUserInfoNCC
+  getUserInfoRoute: getUserInfoNCCRoute
 };
