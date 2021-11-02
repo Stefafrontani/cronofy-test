@@ -16,7 +16,7 @@ router.use('*', (req, res, next) => {
 
 router.get('/', getCronofyEvents);
 router.post('/', createEventRoute);
-router.get('/subscriptions/callback', receiveCronofyEventsTriggers);
+router.post('/subscriptions/callback', receiveCronofyEventsTriggers);
 router.post('/notifications', createNotificationsChannel);
 router.post('/notifications/callback', receiveCronofyNotifications);
 
