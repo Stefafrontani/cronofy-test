@@ -82,6 +82,14 @@ table tbody tr td:nth-child(4) {
   text-align: left;
 }
 
+
+table tbody tr td p {
+  margin-bottom: 5px;
+}
+table tbody tr td p:before {
+  content: '- ';
+}
+
 table tbody tr td button {
   background-color: white;
 }
