@@ -72,7 +72,7 @@ const refreshAccessToken = async (req, res) => {
   const reqBody = req.body;
   const userId = reqBody.userId;
   if (userId) {
-    const user = await getUserById(userId);
+    const user = await getUserById({ userId });
     
     const cronofyClient = new Cronofy({
       client_id: process.env.CRONOFY_CLIENT_ID,
