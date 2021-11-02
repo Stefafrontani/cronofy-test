@@ -1,5 +1,5 @@
 const queryPeriod1 = {
-  start: "2021-11-02T15:00:00Z",
+  start: "2021-11-02T20:00:00Z",
   end: "2021-11-02T23:00:00Z"
 }
 const queryPeriod2 = {
@@ -33,7 +33,7 @@ const query = (subs) => {
   return ({
     participants,
     required_duration: {
-      minutes: 15
+      minutes: 60
     },
     query_periods: [
       queryPeriod1,
