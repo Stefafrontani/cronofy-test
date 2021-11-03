@@ -7,6 +7,7 @@ const { createAppEvent } = events;
 
 const { Pool } = require('pg');
 const Cronofy = require('cronofy');
+const { updateAppEvent } = require('../../helpers/events');
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
@@ -29,14 +30,9 @@ const getCronofyEvents = async (userId, queryParams) => {
 
   const cronofyClient = new Cronofy(cronofyClientOptions);
 
-  const queryString = Object.entries(queryParams).reduce((acc, [key, value]) => { return `${acc}&${key}=${value}` }, '');
-  console.log(queryString);
+  const createNotificationChannelResponse = await cronofyClient.readEvents(queryParams)
 
-  const createNotificationChannelResponse = await cronofyClient.readEvents(queryString)
-
-  console.log(createNotificationChannelResponse);
-
-  res.status(200).send('OK')
+  return createNotificationChannelResponse;
 }
 
 const createEventRoute = async (req, res) => {
@@ -64,15 +60,15 @@ const receiveCronofyEventsTriggers = async (req, res) => {
     const insertEventResponse = await pool.query(
       `UPDATE events SET "status" = 'completed' WHERE id = $1;`,
     [eventId]);
-  }
+  };
   res.status(200).send({ ok: true });
 }
 
 const createNotificationsChannel = async (req, res) => {
-  console.log('/cronofy/notifications');
+  console.log('/cronofy/events/notifications');
 
   const reqBody = req.body;
-  const { userId: organizerId } = req.body;
+  const { userId: organizerId } = reqBody;
 
   const userFound = await getUserById({ userId: organizerId });
 
@@ -89,7 +85,7 @@ const createNotificationsChannel = async (req, res) => {
   // const calendars = userInfo["cronofy.data"].profiles[0].profile_calendars
 
   const createNotificationsChannelOptions = {
-    callback_url: "http://b628-152-168-95-55.ngrok.io/cronofy/channel/notifications"
+    callback_url: `http://b628-152-168-95-55.ngrok.io/cronofy/events/notifications/callback/${organizerId}`
   };
 
   const createNotificationChannelResponse = await cronofyClient.createNotificationChannel(createNotificationsChannelOptions)
@@ -98,20 +94,22 @@ const createNotificationsChannel = async (req, res) => {
   res.status(200).send('OK');
 }
 
-const receiveCronofyNotifications = (req, res) => {
+const receiveCronofyNotifications = async (req, res) => {
   console.log('/cronofy/channel/notifications');
 
-  // ReadEvents
-  console.log("req.body");
-  console.log(req.body);
-
   const { notification, channel } = req.body;
-  const { type, change_since } = notification;
+  const { type, changes_since } = notification;
 
   if (type === 'change') {
     console.log('notification.type `CHANGE`');
-    const queryParams = { last_modified: change_since }
-    getCronofyEvents(queryParams);
+    const filters = { tzid: 'Etc/UTC', last_modified: changes_since, only_managed: true };
+    const response = await getCronofyEvents(req.params.userId, filters);
+    const { events } = response;
+    
+    if (events.length === 1) {
+      const eventToUpdate = events[0];
+      const updatedEvent = await updateAppEvent(eventToUpdate);
+    }
   }
 
   res.status(200).send('OK');
