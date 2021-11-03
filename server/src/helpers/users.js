@@ -63,7 +63,23 @@ const getUserInfo = async (accessToken) => {
   return userInfo;
 }
 
+
+const getUserProfile = async (userId) => {
+  console.log('getUserProfile helper');
+  let userProfile = {};
+  try {
+    const selectUserProfileResponse = await pool.query(`SELECT * FROM profiles WHERE "userId" = $1`, [userId])
+    userProfile = (selectUserProfileResponse && selectUserProfileResponse.rows) && selectUserProfileResponse.rows[0];
+  } catch (error) {
+    console.log(error)
+  }
+
+  console.log(userProfile);
+  return userProfile;
+}
+
 module.exports = {
   getUserInfo,
-  getUserById
+  getUserById,
+  getUserProfile,
 }
