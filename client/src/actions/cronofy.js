@@ -60,12 +60,12 @@ const createEvent = (newEvent) => {
 const createNotificationsChannel = (userId) => {
   console.log('createNotificationsChannel');
   const headers = { "Content-Type": "application/json; charset=utf-8" }
-  const body = { userId }
+  const body = { userId };
 
-  return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/notifications`, body, headers)
+  return axios.post(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/events/notifications`, body, headers)
   .then((response) => {
     const responseData = response.data;
-    console.log(responseData)
+    console.log(responseData);
     return responseData
   })
  .catch(err => console.log(err))
