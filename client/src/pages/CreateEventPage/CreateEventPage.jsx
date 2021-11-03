@@ -22,16 +22,7 @@ const CreateEventPage = () => {
   const handleCreateEvent = () => {
     const { summary, description } = eventData;
     const { start, end, participants } = slot;
-    if (atendee) {
-      const { email } = atendee;
-      const attendees = {
-        invite: [
-          { email, display_name: `Invitee ${email}` }
-        ]
-      }
-      slot.attendees = attendees;
-    }
-
+    
     const newEvent = {
       // subscriptionCallbackUrl, -> BE
       summary,
@@ -40,6 +31,16 @@ const CreateEventPage = () => {
       end,
       participants,
       // status -> BE
+    }
+    
+    if (atendee) {
+      const { email } = atendee;
+      const attendees = {
+        invite: [
+          { email, display_name: `Invitee ${email}` }
+        ]
+      }
+      newEvent.attendees = attendees;
     }
 
     if (eventSubscriptions.length) {
