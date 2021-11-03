@@ -18,6 +18,6 @@ router.get('/', getCronofyEvents);
 router.post('/', createEventRoute);
 router.post('/subscriptions/callback', receiveCronofyEventsTriggers);
 router.post('/notifications', createNotificationsChannel);
-router.post('/notifications/callback', receiveCronofyNotifications);
+router.post('/notifications/callback/:userId', receiveCronofyNotifications);
 
 module.exports = router;
