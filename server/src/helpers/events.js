@@ -1,7 +1,7 @@
 // dotenv package - use .env file
 require('dotenv').config({ path: './src/.env' });
 
-const { getUserById, getUserInfo } = require('./users');
+const { getUserById, getUserInfo, getUserProfile } = require('./users');
 
 const Cronofy = require('cronofy');
 const { Pool } = require('pg');
@@ -53,11 +53,20 @@ const createCronofyEvent = async ({ event, calendarId, accessToken }) => {
   return { status: 200 };
 }
 
+const createAppUserEvent = async ({ profileId, eventId }) => {
+  let newUserEventCreated;
+
+  const insertUserEventResponse = await pool.query('INSERT INTO users_events ("eventId", "profileId", "status") VALUES ($1, $2, $3) RETURNING *', [eventId, profileId, 'confirmed'])
+
+  newUserEventCreated = insertUserEventResponse.rows[0];
+  return newUserEventCreated;
+}
+
 const createAppEvent = async (newEvent) => {
   // Destructuring evento
   const { summary, description, start, end, participants, subscriptions } = newEvent;
   const subscriptionCallbackUrl = "http://b628-152-168-95-55.ngrok.io/cronofy/events/subscriptions/callback"
-  const defaultEventStatus = 'tentative';
+  const defaultEventStatus = 'confirmed';
 
   if (subscriptions.length) {
     newEvent.subscriptions = [
@@ -74,10 +83,11 @@ const createAppEvent = async (newEvent) => {
     [subscriptionCallbackUrl, summary, description, start, end, defaultEventStatus]
   );
   const insertedEvent = insertEventResponse.rows[0];
+  const newEventId = insertedEvent.id;
 
   // Insertar evento en cronofy por cada participante
   const cronofyEventData = {
-    id: insertedEvent.id,
+    id: newEventId,
     summary,
     description,
     start,
@@ -91,24 +101,44 @@ const createAppEvent = async (newEvent) => {
   participants.forEach(async (participant) => {
     const sub = participant.sub;
     const userFound = await getUserById({ sub });
-    const { accessToken } = userFound;
+    const { id: userId, accessToken } = userFound;
     const userInfo = await getUserInfo(accessToken);
+
+    const userProfile = await getUserProfile(userId);
+    const { id: profileId } = userProfile;
 
     const profile = userInfo["cronofy.data"].profiles[0];
     const calendars = profile.profile_calendars;
-    const profileId = profile.profile_id;
     const calendar = calendars[0];
     const calendarId = calendar.calendar_id;
 
+    const appUserEventCreationResponse = await createAppUserEvent({ eventId: newEventId, profileId });
     const cronofyEventCreationResponse = await createCronofyEvent({ event: cronofyEventData, calendarId, accessToken });
-    console.log(cronofyEventCreationResponse);
   });
 
   // Devolver evento
   return insertedEvent;
 }
 
+const updateAppEvent = async (newEventData) => {
+  console.log('updateAppEvent() helper')
+  console.log('newEventData');
+  console.log(newEventData);
+  const { event_id: eventId, start, end } = newEventData;
+  
+  const updateAppEventResponse = await pool.query(`UPDATE events SET "start" = $1, "end" = $2 WHERE id=$3 RETURNING *`, [start, end, eventId]);
+  console.log('updateAppEventResponse');
+  console.log(updateAppEventResponse);
+
+  const updatedEvent = [updateAppEventResponse && updateAppEventResponse.rows] && updateAppEventResponse.rows[0];
+  console.log('updatedEvent');
+  console.log(updatedEvent);
+  
+  return updatedEvent;
+}
+
 module.exports = {
   createAppEvent,
-  createCronofyEvent
+  createCronofyEvent,
+  updateAppEvent
 }
