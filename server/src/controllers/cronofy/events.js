@@ -1,13 +1,12 @@
 // dotenv package - use .env file
 require('dotenv').config({ path: './src/.env' });
 
-const { users, events } = require('../../helpers');
+const { events, users } = require('../../helpers');
+const { createAppEvent, updateAppEvent } = events;
 const { getUserById } = users;
-const { createAppEvent } = events;
 
 const { Pool } = require('pg');
 const Cronofy = require('cronofy');
-const { updateAppEvent } = require('../../helpers/events');
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
