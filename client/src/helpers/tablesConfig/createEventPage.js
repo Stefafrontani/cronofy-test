@@ -31,6 +31,30 @@ const createEventPageTableRows = [
       component: 'button',
       props: {}
     }
+  ],
+  [
+    "POST: /cronofy/events/notifications",
+    [
+      "Cronofy endpoint + App endpoints",
+      "Creates a notification channel",
+      "TODO: Determinate whether create multi channels for the event or what"
+    ],
+    [
+      "????"
+    ],
+    "????",
+    [
+      "????",
+    ],
+    "????",
+    [
+      '????'
+    ],
+    {
+      html: "CREATE NOTIFICATION CHANNEL",
+      component: 'button',
+      props: {}
+    }
   ]
 ]
 
