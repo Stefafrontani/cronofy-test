@@ -46,8 +46,11 @@ const CreateEventPage = () => {
       newEvent.subscriptions = eventSubscriptions;
     }
 
-    console.log(newEvent);
     createEvent(newEvent);
+  }
+
+  const handleCreateNotificationsChannel = () => {
+    createNotificationsChannel(organizerId);
   }
 
   const handleOnChange = ({ target }) => {
@@ -69,6 +72,8 @@ const CreateEventPage = () => {
 
   createEventPageTablesConfig.cronofy.rows[0][createEventPageTablesConfig.cronofy.rows[0].length - 1].props = { onClick: handleCreateEvent }
   createEventPageTablesConfig.cronofy.rows[0][createEventPageTablesConfig.cronofy.rows[0].length - 1].html = atendee && atendee.email ? 'CONFIRM EVENT WITH ATENDEE' : 'CONFIRM EVENT WITH NO ATENDEE'
+  
+  createEventPageTablesConfig.cronofy.rows[1][createEventPageTablesConfig.cronofy.rows[1].length - 1].props = { onClick: handleCreateNotificationsChannel }
 
   return (
     <div className="createEventPage">
