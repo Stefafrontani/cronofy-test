@@ -2,6 +2,7 @@
 require('dotenv').config({ path: './src/.env' });
 
 const { getUserById, getUserInfo, getUserProfile } = require('./users');
+const { getCandidateById, createCandidate, createCandidateEvent } = require('./candidates');
 
 const Cronofy = require('cronofy');
 const { Pool } = require('pg');
@@ -64,9 +65,9 @@ const createAppUserEvent = async ({ profileId, eventId }) => {
 
 const createAppEvent = async (newEvent) => {
   // Destructuring evento
-  const { summary, description, start, end, participants, subscriptions } = newEvent;
+  const { summary, description, start, end, participants, subscriptions, attendees } = newEvent;
   const subscriptionCallbackUrl = "http://b628-152-168-95-55.ngrok.io/cronofy/events/subscriptions/callback"
-  const defaultEventStatus = 'confirmed';
+  const defaultEventStatus = 'tentative';
 
   if (subscriptions.length) {
     newEvent.subscriptions = [
@@ -85,6 +86,20 @@ const createAppEvent = async (newEvent) => {
   const insertedEvent = insertEventResponse.rows[0];
   const newEventId = insertedEvent.id;
 
+  // Crear candidates if atendees.lenght > 0
+  const { invite: attendeesInvitations } = attendees;
+  attendeesInvitations.forEach(async (attendee) => {
+    const { email } = attendee;
+    const getCandidateResponse = await getCandidateById({ email });
+    const candidateExists = (getCandidateResponse && getCandidateResponse.rows) && getCandidateResponse.rows.lengh > 0;
+    if (!candidateExists) {
+      const insertedCandidate = await createCandidate({ email });
+      const { id: insertedCandidateId } = insertedCandidate;
+      const insertedCandidateEvent = await createCandidateEvent({ candidateId: insertedCandidateId, eventId: newEventId });
+    }
+
+  });
+
   // Insertar evento en cronofy por cada participante
   const cronofyEventData = {
     id: newEventId,
@@ -95,7 +110,8 @@ const createAppEvent = async (newEvent) => {
     conferencing: {
       profile_id: "default"
     },
-    subscriptions
+    subscriptions,
+    attendees
   }
 
   participants.forEach(async (participant) => {
@@ -122,18 +138,12 @@ const createAppEvent = async (newEvent) => {
 
 const updateAppEvent = async (newEventData) => {
   console.log('updateAppEvent() helper')
-  console.log('newEventData');
-  console.log(newEventData);
   const { event_id: eventId, start, end } = newEventData;
   
   const updateAppEventResponse = await pool.query(`UPDATE events SET "start" = $1, "end" = $2 WHERE id=$3 RETURNING *`, [start, end, eventId]);
-  console.log('updateAppEventResponse');
-  console.log(updateAppEventResponse);
 
   const updatedEvent = [updateAppEventResponse && updateAppEventResponse.rows] && updateAppEventResponse.rows[0];
-  console.log('updatedEvent');
-  console.log(updatedEvent);
-  
+
   return updatedEvent;
 }
 
