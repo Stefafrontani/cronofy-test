@@ -10,7 +10,7 @@ const cronofyClient = new Cronofy({
 });
 
 const { users } = require('../../helpers');
-const { getUserById, getUserInfo } = users;
+const { getUserById, getUserInfo, getUserNotificationsChannels, deleteNotificationsChannel } = users;
 
 /** getUserInfoNCC */
 const getUserInfoNCCRoute = async (req, res) => {
@@ -25,6 +25,30 @@ const getUserInfoNCCRoute = async (req, res) => {
   res.send(userInfo);
 }
 
+/** getUserInfoNCC */
+const getUserNotificationsChannelsRoute = async (req, res) => {
+  console.log('getUserInfo');
+  const reqParams = req.params;
+  const userId = reqParams.userId;
+
+  const userNotificationsChannels = await getUserNotificationsChannels({ userId });
+
+  res.send(userNotificationsChannels);
+}
+
+const deleteNotificationsChannelRoute = async (req, res) => {
+  console.log('deleteNotificationsChannelRoute');
+  
+  const reqParams = req.params;
+  const { userId, channelId } = reqParams;
+
+  const userNotificationsChannels = await deleteNotificationsChannel({ userId, channelId });
+
+  res.send(userNotificationsChannels);
+}
+
 module.exports = {
-  getUserInfoRoute: getUserInfoNCCRoute
+  getUserInfoRoute: getUserInfoNCCRoute,
+  getUserNotificationsChannelsRoute,
+  deleteNotificationsChannelRoute
 };
