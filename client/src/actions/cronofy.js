@@ -71,10 +71,40 @@ const createNotificationsChannel = (userId) => {
  .catch(err => console.log(err))
 }
 
+const getUserNotificationsChannels = ({ userId }) => {
+  console.log('getUserNotificationsChannels');
+  const headers = { "Content-Type": "application/json; charset=utf-8" }
+  const body = { userId };
+
+  return axios.get(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/users/${userId}/notifications`, body, headers)
+  .then((response) => {
+    const responseData = response.data;
+    console.log(responseData);
+    return responseData
+  })
+ .catch(err => console.log(err))
+}
+
+const deleteNotificationsChannel = ({ userId, channelId }) => {
+  console.log('deleteNotificationsChannel');
+  const headers = { "Content-Type": "application/json; charset=utf-8" }
+  const body = { channelId };
+
+  return axios.delete(`${process.env.REACT_APP_COLONY_API_URL}/cronofy/users/${userId}/notifications/${channelId}`, body, headers)
+  .then((response) => {
+    const responseData = response.data;
+    console.log(responseData);
+    return responseData
+  })
+ .catch(err => console.log(err))
+}
+
 export const cronofyActions = {
   getUserInfo,
   refreshToken,
   getElementToken,
   createEvent,
   createNotificationsChannel,
+  getUserNotificationsChannels,
+  deleteNotificationsChannel,
 };
