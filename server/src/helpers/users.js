@@ -78,8 +78,61 @@ const getUserProfile = async (userId) => {
   return userProfile;
 }
 
+/** getUserInfoNCC */
+const getUserNotificationsChannels = async ({ userId }) => {
+  console.log('getUserNotificationsChannels helper');
+  
+  const userFound = await getUserById({ userId });
+  const { accessToken } = userFound;
+  
+  const cronofyClientOptions = {
+    client_id: process.env.CRONOFY_CLIENT_ID,
+    client_secret: process.env.CRONOFY_CLIENT_SECRET,
+    data_center: process.env.CRONOFY_DATA_CENTER_ID,
+    access_token: accessToken
+  };
+
+  const cronofyClient = new Cronofy(cronofyClientOptions);
+
+  try {
+    const userNotificationsChannels = await cronofyClient.listNotificationChannels();
+    return userNotificationsChannels;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const deleteNotificationsChannel = async ({ userId, channelId }) => {
+  console.log('deleteUserNotificationsChannel helper');
+  console.log('userId');
+  console.log(userId);
+  console.log('channelId');
+  console.log(channelId);
+  
+  const userFound = await getUserById({ userId });
+  const { accessToken } = userFound;
+  
+  const cronofyClientOptions = {
+    client_id: process.env.CRONOFY_CLIENT_ID,
+    client_secret: process.env.CRONOFY_CLIENT_SECRET,
+    data_center: process.env.CRONOFY_DATA_CENTER_ID,
+    access_token: accessToken
+  };
+
+  const cronofyClient = new Cronofy(cronofyClientOptions);
+
+  try {
+    const userNotificationsChannels = await cronofyClient.deleteNotificationChannel({ channel_id: channelId });
+    return userNotificationsChannels;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   getUserInfo,
   getUserById,
   getUserProfile,
+  getUserNotificationsChannels,
+  deleteNotificationsChannel
 }
