@@ -11,20 +11,32 @@ const createEventPageTableRows = [
       "[Should create an invitation to atendee (candidates)]",
     ],
     [
-      "Yet not created in cronofy"
+      "client_id",
+      "client_secret",
+      "data_center",
+      "access_token",
     ],
-    "Yet not created in cronofy",
+    "createEvent",
     [
-      "Yet not created in cronofy",
+      "summary",
+      "description",
+      "start",
+      "end",
+      "event_id",
+      "calendar_id",
+      "[conferencing]",
+      "[subscriptions]",
+      "[attendees]"
     ],
     "----",
     [
-      'subscriptionCallbackUrl', 
-      'summary',
-      'description',
-      'start',
-      'end',
-      'participants'
+      "summary",
+      "description",
+      "start",
+      "end",
+      "participants",
+      "[subscriptions]",
+      "[attendees]"
     ],
     {
       html: "CONFIRM EVENT WITH ATENDEE",
@@ -40,22 +52,25 @@ const createEventPageTableRows = [
       "TODO: Determinate whether create multi channels for the event or what"
     ],
     [
-      "????"
+      "client_id",
+      "client_secret",
+      "data_center",
+      "access_token",
     ],
-    "????",
+    "createNotificationChannel",
     [
-      "????",
+      "callback_url",
     ],
-    "????",
+    "----",
     [
-      '????'
+      "userId"
     ],
     {
       html: "CREATE NOTIFICATION CHANNEL",
       component: 'button',
       props: {}
     }
-  ]
+  ],
 ]
 
 const createEventPageCronofyTableConfig = { headers: createEventPageTableHeaders, rows: createEventPageTableRows }

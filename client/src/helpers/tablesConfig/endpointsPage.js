@@ -45,7 +45,56 @@ const endpointsPageCronofyTableRows = [
       component: 'button',
       props: {}
     }
-  ]
+  ],
+  [
+    "GET: /cronofy/users/:userId/notifications",
+    [
+      "Cronofy endpoint",
+      "List the user notification channel",
+    ],
+    [
+      "client_id",
+      "client_secret",
+      "data_center",
+      "access_token"
+    ],
+    "listNotificationChannels",
+    "----",
+    "----",
+    '----',
+    {
+      html: "LIST CHANNELS",
+      component: 'button',
+      props: {}
+    }
+  ],
+  [
+    "DELETE: /cronofy/users/:userId/notifications",
+    [
+      "Cronofy endpoint",
+      "Close user notifications channel",
+    ],
+    [
+      "client_id",
+      "client_secret",
+      "data_center",
+      "access_token"
+    ],
+    "deleteNotificationChannel",
+    [
+      "channel_id"
+    ],
+    [
+      "userId",
+      "channelId",
+    ],
+    "----",
+    {
+      html: "CLOSE NOTIFICATIONS CHANNEL",
+      component: 'button',
+      props: {}
+    }
+  ],
 ]
 
 const endpointsPageAppTableConfig = { headers: endpointsPageAppTableHeaders, rows: endpointsPageAppTableRows }
