@@ -76,10 +76,10 @@ const EndpointsPage = () => {
   }, [users])
 
   useEffect(() => {
-    if (userNotificationsChannels.length) {
-      setSelectedUser(userNotificationsChannels[0])
+    if (userNotificationsChannels && userNotificationsChannels.length) {
+      setSelectedUserNotificationsChannel(userNotificationsChannels[0])
     }
-  }, [users])
+  }, [userNotificationsChannels])
   
   useEffect(() => {
     if (selectedUser && selectedUser.id) {
