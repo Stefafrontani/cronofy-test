@@ -2,7 +2,7 @@ const { Router } =  require('express');
 const router = Router();
 
 const { users } = require('../../controllers/app')
-const { getUsers/* , getUserById */ } = users;
+const { getUsers, getEvents } = users;
 
 router.use('*', (req, res, next) => {
   console.log('/users');
@@ -10,6 +10,6 @@ router.use('*', (req, res, next) => {
 });
 
 router.get('/', getUsers);
-// router.get('/:userId', getUserById);
+router.get('/:userId/events', getEvents);
 
 module.exports = router;
