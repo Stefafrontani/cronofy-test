@@ -37,7 +37,20 @@ const getUserById = (userId) => {
    .catch(err => console.log(err))
 }
 
+const getEvents = (userId) => {
+  console.log('getEvents');
+  const headers = { "Content-Type": "application/json; charset=utf-8" }
+
+  return axios.get(`${process.env.REACT_APP_COLONY_API_URL}/app/users/${userId}/events`, { headers })
+    .then(async (response) => {
+      const userFound = response.data;
+      return userFound;
+    })
+   .catch(err => console.log(err))
+}
+
 export const userActions = {
   getUsers,
+  getEvents,
   getUserById
 };
