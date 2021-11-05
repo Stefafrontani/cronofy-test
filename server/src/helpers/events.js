@@ -136,9 +136,69 @@ const createAppEvent = async (newEvent) => {
   return insertedEvent;
 }
 
+const checkEventStatus = async (eventAttendees) => {
+  const eventStatus = 'unknown';
+  if (!eventAttendees.length) {
+    return eventStatus;
+  }
+
+  for (let i = 0; i < eventAttendees.length; i++) {
+    const attendee = attendees[i];
+    const { email: attendeeEmail, status: candidateEventStatus } = attendee;
+
+    if (candidateEventStatus) {
+
+    }
+    const attendeeStatus = attendee.status;
+    const { id: candidateFoundId } = candidateFound;
+    console.log(`attendeeStatus, ${attendeeStatus}`);
+    if (attendeeStatus === 'needs_action' || attendeeStatus === 'tentative') {
+      console.log(`attendeeStatus === 'needs_action'`);
+      candidateEventStatus = 'tentative';
+    }
+    if (attendeeStatus === 'confirmed') {
+      console.log(`attendeeStatus === 'confirmed'`);
+      candidateEventStatus = 'confirmed';
+    }
+    if (attendeeStatus === 'declined') {
+      console.log(`attendeeStatus === 'declined'`);
+      candidateEventStatus = 'declined';
+    }
+    const updateCandidateEventStatusResponse = await pool.query(`UPDATE candidates_events SET "status" = $1 WHERE "candidateId" = $2 RETURNING *`, [candidateEventStatus, candidateFoundId]);
+    const updatedCandidateEvent = updateCandidateEventStatusResponse.rows[0];
+    console.log(updatedCandidateEvent);
+  }
+}
+
 const updateAppEvent = async (newEventData) => {
   console.log('updateAppEvent() helper')
-  const { event_id: eventId, start, end } = newEventData;
+  const { event_id: eventId, start, end, attendees } = newEventData;
+  let eventStatus = 'tentative';
+  for (let i = 0; i < attendees.length; i++) {
+    let candidateEventStatus = '';
+    const attendee = attendees[i];
+    const { email: attendeeEmail } = attendee;
+
+    const selectCandidateResponse = await pool.query(`SELECT * FROM candidates WHERE email = $1`, [attendeeEmail]);
+    const candidateFound = selectCandidateResponse.rows[0];
+
+    if (candidateFound) {
+      const attendeeStatus = attendee.status;
+      const { id: candidateFoundId } = candidateFound;
+      if (attendeeStatus === 'needs_action' || attendeeStatus === 'tentative') {
+        candidateEventStatus = 'tentative';
+      }
+      if (attendeeStatus === 'confirmed') {
+        candidateEventStatus = 'confirmed';
+      }
+      if (attendeeStatus === 'declined') {
+        candidateEventStatus = 'declined';
+      }
+      const updateCandidateEventStatusResponse = await pool.query(`UPDATE candidates_events SET "status" = $1 WHERE "candidateId" = $2 RETURNING *`, [candidateEventStatus, candidateFoundId]);
+      const updatedCandidateEvent = updateCandidateEventStatusResponse.rows[0];
+    }
+  }
+  
   
   const updateAppEventResponse = await pool.query(`UPDATE events SET "start" = $1, "end" = $2 WHERE id=$3 RETURNING *`, [start, end, eventId]);
 
