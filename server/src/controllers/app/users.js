@@ -11,6 +11,10 @@ const pool = new Pool({
   database: process.env.POSTGRES_DB
 });
 
+
+const { users } = require('../../helpers');
+const { getUserProfile } = users;
+
 const querysFunctions = require('../../helpers/querys')
 const { returnArrayOfJson } = querysFunctions;
 
@@ -48,6 +52,32 @@ const getUsers = async (req, res) => {
   res.send(usersWithProfiles);
 }
 
+const getEvents = async (req, res) => {
+  console.log('getEvents');
+
+  const params = req.params;
+  const { userId } = params;
+
+  const userProfile = await getUserProfile(userId);
+  const { id: profileId } = userProfile;
+
+  const getUserEventsResponse = await pool.query(`SELECT * FROM users_events e WHERE "profileId" = $1;`, [profileId]);
+  const userEvents = getUserEventsResponse.rows;
+
+  const promises = await userEvents.map(async (userEvent, index) => {
+    const { eventId } = userEvent;
+    const getUserEventsResponse = await pool.query(`SELECT * FROM events e WHERE "id" = $1;`, [eventId]);
+    const event = getUserEventsResponse.rows[0];
+
+    return event
+  }, []);
+
+  const events = await Promise.all(promises);
+
+  res.send(events);
+}
+
 module.exports = {
-  getUsers
+  getUsers,
+  getEvents
 }
