@@ -1,6 +1,9 @@
 // dotenv package - use .env file
 require('dotenv').config({ path: './src/.env' });
 
+const Cronofy = require('cronofy');
+const { getUserById } = require('./users');
+
 const { Pool } = require('pg');
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
@@ -71,6 +74,35 @@ const signUp = async (cronofyUser) => {
   return res
 }
 
+const refreshAccessToken = async ({ userId, accessToken }) => {
+  if (userId) {
+    const user = await getUserById({ userId });
+    
+    const cronofyClient = new Cronofy({
+      client_id: process.env.CRONOFY_CLIENT_ID,
+      client_secret: process.env.CRONOFY_CLIENT_SECRET,
+      data_center: process.env.CRONOFY_DATA_CENTER_ID
+    });
+    
+    const cronofyUserInfo = await cronofyClient.refreshAccessToken({
+      client_id: process.env.CRONOFY_CLIENT_ID,
+      client_secret: process.env.CRONOFY_CLIENT_SECRET,
+      grant_type: "refresh_token",
+      refresh_token: user.refreshToken
+    }).catch((err) => {
+      console.error(err);
+    });
+
+    const { access_token } = cronofyUserInfo;
+    const response = await pool.query(`UPDATE users SET "accessToken" = $1 WHERE id = $2 RETURNING *;`, [access_token, userId])
+    
+    const userUpdated = response && response.rows && response.rows[0];
+
+    return userUpdated;
+  }  
+}
+
 module.exports = {
-  signUp
+  signUp,
+  refreshAccessToken,
 }
