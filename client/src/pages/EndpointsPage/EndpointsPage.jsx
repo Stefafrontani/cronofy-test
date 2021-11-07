@@ -6,7 +6,7 @@ import './EndpointsPage.css';
 const { endpointsPageTablesConfig } = tablesConfig;
 
 const { getUsers } = userActions;
-const { getUserInfo, refreshToken, getUserNotificationsChannels, deleteNotificationsChannel } = cronofyActions;
+const { getUserInfo, refreshToken, getUserNotificationsChannels, createNotificationsChannel, deleteNotificationsChannel } = cronofyActions;
 
 const EndpointsPage = () => {
   const [users, setUsers] = useState([]);
@@ -30,8 +30,7 @@ const EndpointsPage = () => {
 
   /** CRONOFY */
   const handleGetUserInfo = async () => {
-    console.log('handleGetUserInfo');
-    const selectedUserId = selectedUser.id; 
+    const selectedUserId = selectedUser.id;
     const userInfo = await getUserInfo(selectedUserId);
     console.log(userInfo);
   }
@@ -40,7 +39,6 @@ const EndpointsPage = () => {
     console.log('handleRefreshToken');
     const selectedUserId = selectedUser.id; 
     const userUpdated = await refreshToken(selectedUserId);
-    console.log(userUpdated)
   }
   
   const handleGetUserNotificationsChannels = async () => {
@@ -48,6 +46,11 @@ const EndpointsPage = () => {
     const userNotificationsChannelsResponse = await getUserNotificationsChannels({ userId });
     const { channels: userNotificationsChannels } = userNotificationsChannelsResponse;
     setUserNotificationsChannels(userNotificationsChannels);
+  }
+
+  const handleCreateNotificationsChannel = () => {
+    const selectedUserId = selectedUser.id;
+    createNotificationsChannel(selectedUserId);
   }
 
   const handleDeleteNotificationsChannels = async () => {
@@ -58,7 +61,6 @@ const EndpointsPage = () => {
 
   /** APPLICATION */
   const handleGetUsers = async () => {
-    console.log('handleGetUsers');
     const users = await getUsers();
     if (users) {
       setUsers(users)
@@ -91,6 +93,7 @@ const EndpointsPage = () => {
   endpointsPageTablesConfig.cronofy.rows[1][endpointsPageTablesConfig.cronofy.rows[1].length - 1].props = { onClick: handleRefreshToken }
   endpointsPageTablesConfig.cronofy.rows[2][endpointsPageTablesConfig.cronofy.rows[2].length - 1].props = { onClick: handleGetUserNotificationsChannels }
   endpointsPageTablesConfig.cronofy.rows[3][endpointsPageTablesConfig.cronofy.rows[3].length - 1].props = { onClick: handleDeleteNotificationsChannels }
+  endpointsPageTablesConfig.cronofy.rows[4][endpointsPageTablesConfig.cronofy.rows[4].length - 1].props = { onClick: handleCreateNotificationsChannel }
 
   endpointsPageTablesConfig.app.rows[0][endpointsPageTablesConfig.app.rows[0].length - 1].props = { onClick: handleGetUsers }
 

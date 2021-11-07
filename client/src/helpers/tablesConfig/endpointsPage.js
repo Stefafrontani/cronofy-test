@@ -95,6 +95,33 @@ const endpointsPageCronofyTableRows = [
       props: {}
     }
   ],
+  [
+    "POST: /cronofy/events/notifications",
+    [
+      "Cronofy endpoint + App endpoints",
+      "Creates a notification channel",
+      "TODO: Determinate whether create multi channels for the event or what"
+    ],
+    [
+      "client_id",
+      "client_secret",
+      "data_center",
+      "access_token",
+    ],
+    "createNotificationChannel",
+    [
+      "callback_url",
+    ],
+    "----",
+    [
+      "userId"
+    ],
+    {
+      html: "CREATE NOTIFICATION CHANNEL",
+      component: 'button',
+      props: {}
+    }
+  ],
 ]
 
 const endpointsPageAppTableConfig = { headers: endpointsPageAppTableHeaders, rows: endpointsPageAppTableRows }

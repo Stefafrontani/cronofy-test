@@ -7,7 +7,7 @@ import './CreateEventPage.css';
 
 const { createEventPageTablesConfig } = tablesConfig;
 
-const { createEvent, createNotificationsChannel } = cronofyActions;
+const { createEvent } = cronofyActions;
 
 const CreateEventPage = () => {
   const [ atendee, setAtendee ] = useState({ email: "stefanofrontani13@gmail.com" });
@@ -17,7 +17,6 @@ const CreateEventPage = () => {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const stringifiedSlot = urlSearchParams.get('slot');
   const slot = JSON.parse(stringifiedSlot);
-  const organizerId = urlSearchParams.get('organizerId');
 
   const handleCreateEvent = () => {
     const { summary, description } = eventData;
@@ -50,10 +49,6 @@ const CreateEventPage = () => {
     createEvent(newEvent);
   }
 
-  const handleCreateNotificationsChannel = () => {
-    createNotificationsChannel(organizerId);
-  }
-
   const handleOnChange = ({ target }) => {
     const { name, value } = target;
     setAtendee({ [name]: value })
@@ -73,8 +68,6 @@ const CreateEventPage = () => {
 
   createEventPageTablesConfig.cronofy.rows[0][createEventPageTablesConfig.cronofy.rows[0].length - 1].props = { onClick: handleCreateEvent }
   createEventPageTablesConfig.cronofy.rows[0][createEventPageTablesConfig.cronofy.rows[0].length - 1].html = atendee && atendee.email ? 'CONFIRM EVENT WITH ATENDEE' : 'CONFIRM EVENT WITH NO ATENDEE'
-  
-  createEventPageTablesConfig.cronofy.rows[1][createEventPageTablesConfig.cronofy.rows[1].length - 1].props = { onClick: handleCreateNotificationsChannel }
 
   return (
     <div className="createEventPage">
