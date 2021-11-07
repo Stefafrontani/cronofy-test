@@ -66,8 +66,8 @@ const receiveCronofyEventsTriggers = async (req, res) => {
 const createNotificationsChannel = async (req, res) => {
   console.log('/cronofy/events/notifications');
 
-  const reqBody = req.body;
-  const { userId: organizerId } = reqBody;
+  const { user } = req;
+  const { id: organizerId } = user;
 
   const userFound = await getUserById({ userId: organizerId });
 
@@ -84,7 +84,7 @@ const createNotificationsChannel = async (req, res) => {
   // const calendars = userInfo["cronofy.data"].profiles[0].profile_calendars
 
   const createNotificationsChannelOptions = {
-    callback_url: `http://b628-152-168-95-55.ngrok.io/cronofy/events/notifications/callback/${organizerId}`
+    callback_url: `http://eadd-152-168-95-55.ngrok.io/cronofy/events/notifications/callback/${organizerId}`
   };
 
   const createNotificationChannelResponse = await cronofyClient.createNotificationChannel(createNotificationsChannelOptions)

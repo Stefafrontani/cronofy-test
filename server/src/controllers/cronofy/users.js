@@ -28,8 +28,8 @@ const getUserInfoNCCRoute = async (req, res) => {
 /** getUserInfoNCC */
 const getUserNotificationsChannelsRoute = async (req, res) => {
   console.log('getUserInfo');
-  const reqParams = req.params;
-  const userId = reqParams.userId;
+  const { user } = req;
+  const { id: userId } = user;
 
   const userNotificationsChannels = await getUserNotificationsChannels({ userId });
 
@@ -39,8 +39,15 @@ const getUserNotificationsChannelsRoute = async (req, res) => {
 const deleteNotificationsChannelRoute = async (req, res) => {
   console.log('deleteNotificationsChannelRoute');
   
-  const reqParams = req.params;
-  const { userId, channelId } = reqParams;
+  const { params, user } = req;
+  const { channelId } = params
+
+  const userId = user.id;
+  console.log("userId");
+  console.log(userId);
+
+  console.log("channelId");
+  console.log(channelId);
 
   const userNotificationsChannels = await deleteNotificationsChannel({ userId, channelId });
 
