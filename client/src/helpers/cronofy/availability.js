@@ -1,6 +1,6 @@
 const queryPeriod1 = {
-  start: "2021-11-05T03:00:00Z",
-  end: "2021-11-05T23:59:00Z"
+  start: "2021-11-08T03:00:00Z",
+  end: "2021-11-08T23:59:00Z"
 }
 const queryPeriod2 = {
   start: "2021-12-16T12:00:00Z",
@@ -51,7 +51,7 @@ const confirmedSlotCallback = (res, organizerId) => {
   const slot = JSON.stringify(res.notification.slot);
 
   // Load the last page of our app, with the `slot` in the query string.
-  window.location.href = `/createEvent?organizerId=${organizerId}&slot=${slot}`;
+  window.location.href = `/createEvent?slot=${slot}`;
 };
 
 export const availability = {
