@@ -6,6 +6,7 @@ const { getCandidateById, createCandidate, createCandidateEvent } = require('./c
 
 const Cronofy = require('cronofy');
 const { Pool } = require('pg');
+const { refreshAccessToken } = require('./auth');
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
@@ -43,7 +44,7 @@ const createCronofyEvent = async ({ event, calendarId, accessToken }) => {
     requestElementTokenOptions.subscriptions = [
       {
         type: "webhook",
-        uri: "http://b628-152-168-95-55.ngrok.io/cronofy/events/subscriptions/callback",
+        uri: "http://eadd-152-168-95-55.ngrok.io/cronofy/events/subscriptions/callback",
         transitions: subscriptions
       }
     ];
@@ -66,7 +67,7 @@ const createAppUserEvent = async ({ profileId, eventId }) => {
 const createAppEvent = async (newEvent) => {
   // Destructuring evento
   const { summary, description, start, end, participants, subscriptions, attendees } = newEvent;
-  const subscriptionCallbackUrl = "http://b628-152-168-95-55.ngrok.io/cronofy/events/subscriptions/callback"
+  const subscriptionCallbackUrl = "http://eadd-152-168-95-55.ngrok.io/cronofy/events/subscriptions/callback"
   const defaultEventStatus = 'tentative';
 
   if (subscriptions.length) {
@@ -117,7 +118,9 @@ const createAppEvent = async (newEvent) => {
   participants.forEach(async (participant) => {
     const sub = participant.sub;
     const userFound = await getUserById({ sub });
-    const { id: userId, accessToken } = userFound;
+    const { id: userId } = userFound;
+    const userUpdated = await refreshAccessToken({ userId })
+    const { accessToken } = userUpdated;
     const userInfo = await getUserInfo(accessToken);
 
     const userProfile = await getUserProfile(userId);
