@@ -9,10 +9,9 @@ const pool = new Pool({
   host: process.env.POSTGRES_HOST,
   port: process.env.POSTGRES_PORT,
   database: process.env.POSTGRES_DB
-})
-const { auth, users } = require('../../helpers');
-const { signUp } = auth;
-const { getUserById } = users;
+});
+const { auth } = require('../../helpers');
+const { signUp, refreshAccessToken } = auth;
 
 const getAccessToken = async (req, res) => {
   console.log('/getAccessToken');
@@ -66,36 +65,15 @@ const getAccessTokenNCC = async (req, res) => {
   .catch(err => console.log(err))
 }
 
-const refreshAccessToken = async (req, res) => {
+const refreshAccessTokenRoute = async (req, res) => {
   console.log('/refreshAccessToken');
 
-  const reqBody = req.body;
-  const userId = reqBody.userId;
-  if (userId) {
-    const user = await getUserById({ userId });
-    
-    const cronofyClient = new Cronofy({
-      client_id: process.env.CRONOFY_CLIENT_ID,
-      client_secret: process.env.CRONOFY_CLIENT_SECRET,
-      data_center: process.env.CRONOFY_DATA_CENTER_ID
-    });
-    
-    const cronofyUserInfo = await cronofyClient.refreshAccessToken({
-      client_id: process.env.CRONOFY_CLIENT_ID,
-      client_secret: process.env.CRONOFY_CLIENT_SECRET,
-      grant_type: "refresh_token",
-      refresh_token: user.refreshToken
-    }).catch((err) => {
-      console.error(err);
-    });
+  const headers = req.headers;
+  const { "user-id": userId} = headers;
 
-    const { access_token } = cronofyUserInfo;
-    const response = await pool.query(`UPDATE users SET "accessToken" = $1 WHERE id = $2 RETURNING *;`, [access_token, userId])
-    
-    const userUpdated = response && response.rows && response.rows[0];
+  const userUpdated = await refreshAccessToken({ userId });
 
-    res.send(userUpdated)
-  }
+  res.send(userUpdated);
 }
 
 const getElementToken = async (req, res) => {
@@ -125,6 +103,6 @@ const getElementToken = async (req, res) => {
 module.exports = {
   getAccessToken,
   getAccessTokenNCC,
-  refreshAccessToken,
+  refreshAccessTokenRoute,
   getElementToken
 };
