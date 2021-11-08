@@ -1,3 +1,59 @@
-.eventsPage {
-  
+.eventsPage {}
+
+.events {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.events .events_user {
+  font-size: 14px;
+  color: rgba(60,60,60);
+  margin: 20px 0px;
+}
+.events .events_user span {
+  color: rgba(60,60,60);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.events .events_list {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 30px;
+}
+
+.event {
+  padding: 10px 15px;
+  border-radius: 30px;
+  background-color: white;
+  box-shadow: 2px 2px 10px 2px rgba(0,0,0,.1);
+}
+
+.event .startDate,
+.event .endDate {
+  font-size: 12px;
+  color: rgb(124, 124, 124);
+}
+.event .summary {
+  font-size: 16px;
+  text-align: left;
+  color: rgb(80, 80, 80);
+}
+.event .description {
+  font-size: 14px;
+  text-align: left;
+  color: rgb(80, 80, 80);
+}
+.event .status {
+  visibility: hidden;
+  font-size: 16px;
+}
+.event .status--confirmed {
+  background-color: lightgreen;
+}
+.event .status--tentative {
+  background-color: lightyellow;
+}
+.event .status--cancelled {
+  background-color: lightcoral;
 }

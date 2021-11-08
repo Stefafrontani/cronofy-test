@@ -73,27 +73,49 @@ const EventsPage = () => {
             : null
           }
         </div>
-        <div>
-          <h2>EVENTS for user: {selectedUser && selectedUser.description}</h2>
-          <ul>
+        <div className="events">
+          <h2 className="events_user">EVENTS for user: <span>{selectedUser && selectedUser.description}</span></h2>
+          <ul className="events_list">
             {events.length > 0 && events.map((event, index) => {
               const { start, end, summary, description, status } = event;
+              const startDate = new Date(start);
+              const endDate = new Date(end);
               return (
-                <li key={index}>
-                  <p>{start}</p>
-                  <p>{end}</p>
-                  <p>{summary}</p>
-                  <p>{description}</p>
-                  <p>{status}</p>
+                <li className="event" key={index}>
+                  <p className="summary">{summary}</p>
+                  <p className="description">{description}</p>
+                  <p className="startDate">
+                    <span>
+                      Empieza: {` `}
+                      </span><span>
+                        {startDate.toLocaleString(
+                          'es-AR',
+                          {
+                            month: 'short',
+                            day: '2-digit',
+                            hour: "numeric",
+                            minute: "numeric"
+                          }
+                        )}
+                    </span>
+                  </p>
+                  <p className="endDate">
+                    <span>Termina: </span><span>{endDate.toLocaleString('es-AR', {})}</span>
+                  </p>
+                  <p className="status">{status}</p>
                 </li>
               )
             })}
           </ul>
         </div>
       </div>
-      <h2>APP ENDPOINTS</h2>
-      <h3>EVENTS</h3>
-      {window.createTable(eventsPageTablesConfig.app)}
+      <div className="table">
+        <div className="app">
+          <h2>APP ENDPOINTS</h2>
+          {window.createTable(eventsPageTablesConfig.app)}
+        </div>
+        <div className="cronofy"></div>
+      </div>
     </div>
   );
 }

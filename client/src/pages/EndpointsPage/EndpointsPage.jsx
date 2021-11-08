@@ -129,11 +129,16 @@ const EndpointsPage = () => {
           }
         </div>
       </div>
-      <h2>Cronofy ENDPOINTS</h2>
-      {window.createTable(endpointsPageTablesConfig.cronofy)};
-      <h2>APP ENDPOINTS</h2>
-      <h3>USERS</h3>
-      {window.createTable(endpointsPageTablesConfig.app)};
+      <div className="table">
+        <div className="app">
+          <h2>APP ENDPOINTS</h2>
+          {window.createTable(endpointsPageTablesConfig.app)};
+        </div>
+        <div className="cronofy">
+          <h2>Cronofy ENDPOINTS</h2>
+          {window.createTable(endpointsPageTablesConfig.cronofy)};
+        </div>
+      </div>
     </div>
   );
 }

@@ -165,7 +165,14 @@ const DateTimePickerPage = () => {
               })}
             </ul>
           </div>
-          {window.createTable(dateTimePickerPageTablesConfig.cronofy)}
+          <div className="table">
+            <div className="app">
+            </div>
+            <div className="cronofy">
+              <h2>Cronofy ENDPOINTS</h2>
+              {window.createTable(dateTimePickerPageTablesConfig.cronofy)}
+            </div>
+          </div>
         </div>
       }
     </div>  
