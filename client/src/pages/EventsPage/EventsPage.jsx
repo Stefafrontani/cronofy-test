@@ -81,27 +81,32 @@ const EventsPage = () => {
               const startDate = new Date(start);
               const endDate = new Date(end);
               return (
-                <li className="event" key={index}>
+                <li className={`event event--${status}`} key={index}>
                   <p className="summary">{summary}</p>
                   <p className="description">{description}</p>
-                  <p className="startDate">
-                    <span>
-                      Empieza: {` `}
-                      </span><span>
-                        {startDate.toLocaleString(
-                          'es-AR',
-                          {
-                            month: 'short',
-                            day: '2-digit',
-                            hour: "numeric",
-                            minute: "numeric"
-                          }
-                        )}
-                    </span>
-                  </p>
-                  <p className="endDate">
-                    <span>Termina: </span><span>{endDate.toLocaleString('es-AR', {})}</span>
-                  </p>
+                  <div className="dates">
+                    <p className="dates_start">
+                      {startDate.toLocaleString(
+                        'es-AR',
+                        {
+                          month: 'short',
+                          day: '2-digit',
+                          hour: "numeric",
+                          minute: "numeric"
+                        }
+                      )}
+                    </p>
+                    <span> - </span>
+                    <p className="dates_end">
+                      {endDate.toLocaleString(
+                        'es-AR',
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        }
+                      )}
+                    </p>
+                  </div>
                   <p className="status">{status}</p>
                 </li>
               )

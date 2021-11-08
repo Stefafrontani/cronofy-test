@@ -3,6 +3,7 @@
 .events {
   display: flex;
   flex-flow: column nowrap;
+  margin-bottom: 20px;
 }
 
 .events .events_user {
@@ -29,11 +30,6 @@
   box-shadow: 2px 2px 10px 2px rgba(0,0,0,.1);
 }
 
-.event .startDate,
-.event .endDate {
-  font-size: 12px;
-  color: rgb(124, 124, 124);
-}
 .event .summary {
   font-size: 16px;
   text-align: left;
@@ -44,16 +40,30 @@
   text-align: left;
   color: rgb(80, 80, 80);
 }
-.event .status {
-  visibility: hidden;
-  font-size: 16px;
+.events .dates {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 10px;
 }
-.event .status--confirmed {
+.event .dates_start,
+.event .dates_end {
+  font-size: 12px;
+  color: rgb(124, 124, 124);
+}
+.event .status {
+  color: black;
+  text-transform: uppercase;
+  font-size: 16px;
+  padding: 5px;
+}
+.event--confirmed {
   background-color: lightgreen;
 }
-.event .status--tentative {
+.event--tentative {
   background-color: lightyellow;
 }
-.event .status--cancelled {
+.event--cancelled {
   background-color: lightcoral;
 }
